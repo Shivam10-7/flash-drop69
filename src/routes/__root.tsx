@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -78,16 +79,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "FlashDrop" },
+      { name: "description", content: "Share snippets and files with a 4-digit PIN. Gone in 24 hours." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap",
+      },
       {
         rel: "stylesheet",
         href: appCss,
@@ -120,8 +123,22 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <div className="flex min-h-screen flex-col font-sans antialiased">
+        <header className="mx-auto flex w-full max-w-2xl items-center justify-between px-5 py-5">
+          <Link to="/" className="flex items-center gap-2 text-lg font-bold tracking-tight">
+            <span className="grid h-7 w-7 place-items-center rounded-md bg-accent text-accent-foreground">⚡</span>
+            FlashDrop
+          </Link>
+          <span className="font-mono text-xs text-muted-foreground">gone in 24h</span>
+        </header>
+        <main className="mx-auto w-full max-w-2xl flex-1 px-5 pb-12">
+          <Outlet />
+        </main>
+        <footer className="mx-auto w-full max-w-2xl px-5 py-6 text-center font-mono text-xs text-muted-foreground">
+          No accounts. No traces. Every drop self-destructs after 24 hours.
+        </footer>
+      </div>
+      <Toaster position="top-center" />
     </QueryClientProvider>
   );
 }
