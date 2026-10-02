@@ -68,7 +68,10 @@ function SendPanel() {
 
   const pickFile = (f?: File | null) => {
     if (!f) return;
-    if (f.size > MAX_FILE_BYTES) return toast.error("Files must be under 20 MB");
+    if (f.size > MAX_FILE_BYTES) {
+      toast.error("Files must be under 20 MB");
+      return;
+    }
     setFile(f);
   };
 
