@@ -1,50 +1,199 @@
 # FlashDrop ⚡
 
-Ephemeral file and code snippet sharing across devices with zero friction, zero accounts, and 24-hour self-destruction.
+**Ephemeral file and code snippet sharing across devices — zero friction, zero accounts, 24-hour self-destruction.**
+
+🔗 **Live Demo:** https://flash-drop69.lovable.app
 
 ---
 
-### The Annoyance
-* **What it is:** Moving snippets, commands, or files between nearby devices (phone to laptop, lab partner to lab partner) is clunky.
-* **Who it annoys:** Students, lab partners, and developers working across multiple machines.
-* **How we know:** Everyone defaults to self-emailing, spamming private Slack/Discord DMs, or texting themselves on WhatsApp just to transfer a terminal command or a PDF.
+## The Annoyance
 
-### Your Constraint
-* **Constraint (PRN ending in 7):** *Forgetful — Everything is deleted after 24 hours.*
-* **How it shaped the build:** Enforced strict 24-hour Time-To-Live (TTL) on all drops. No persistent storage, no user accounts, and an active live countdown timer on every drop so users know exactly when data self-destructs. Expired items are purged automatically.
+### What is it?
 
-### The Great Part
-* **4-Digit PIN & Dynamic QR Code Flow:** Instant pairing without typing URLs. On mobile, just point the camera at the QR code; on a lab PC, punch 4 digits and the drop opens automatically on the 4th keystroke.
+Moving snippets, commands, or files between nearby devices — such as a phone to a laptop or between lab partners — is unnecessarily clunky.
 
-### The Two Testers
-* **Tester 1 (Lab partner on desktop):** Got stuck waiting for a "Submit" button after typing the PIN.
-  * *Fix:* Added auto-focus, automatic trigger on the 4th digit, and clearer input feedback.
-* **Tester 2 (Mobile user):** Got confused trying to download raw code snippets onto mobile storage instead of copying them.
-  * *Fix:* Split actions into distinct "Copy Snippet" with a visual confirmation toast and "Download File" for binary uploads.
+### Who does it annoy?
 
-### AI
-* **What AI was used for:** Generating the responsive UI layout, countdown timer logic, and file upload state handling.
-* **One thing it got wrong:** The initial QR code bundle crashed rendering with a blank screen; had to fix the QR component integration and add fallback rendering.
+- Students
+- Lab partners
+- Developers working across multiple machines
 
-### Not Done
-* **Syntax highlighting:** Code displays in a dark monospace block with a language label, but lacks multi-color syntax highlighting.
-* **PIN brute-force protection:** 4-digit PINs offer 10,000 combinations without rate-limiting, suitable for non-sensitive transfers but not high-security data.
-* **Scheduled server-side cron:** Drops expire passively when queried or created rather than via an active independent daemon.
+### How do people solve it today?
 
-### Run It Locally
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd flashdrop
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Configure environment variables in `.env`:
-   * `VITE_SUPABASE_URL`
-   * `VITE_SUPABASE_ANON_KEY`
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
+People often resort to:
+
+- Emailing files to themselves
+- Sending messages to private Slack/Discord DMs
+- Messaging themselves on WhatsApp
+
+All just to transfer a terminal command, code snippet, or PDF.
+
+---
+
+## Your Constraint
+
+### PRN Ending in 7 — **Forgetful**
+
+The core constraint was simple:
+
+> **Everything must be deleted after 24 hours.**
+
+This shaped the entire architecture and user experience:
+
+- Strict **24-hour TTL** on every drop
+- No user accounts
+- No permanent storage
+- Live countdown timer showing exactly when a drop expires
+- Expired items are automatically purged when the system encounters them
+
+The goal is intentional ephemerality: **share it, use it, forget it.**
+
+---
+
+## The Great Part 🚀
+
+### 4-Digit PIN + Dynamic QR Code Flow
+
+FlashDrop provides two fast ways to access a shared drop.
+
+#### 📱 Mobile — Scan & Go
+
+Point your phone's camera at the dynamically generated QR code and open the drop instantly.
+
+#### 💻 Desktop — 4-Digit PIN
+
+On a lab PC or another device:
+
+1. Enter the 4-digit PIN.
+2. The interface automatically detects the fourth digit.
+3. The drop opens immediately — no submit button required.
+
+This keeps the transfer flow fast when moving data between nearby devices.
+
+---
+
+## The Two Testers
+
+Real testing exposed two usability problems.
+
+### Tester 1 — Lab Partner on Desktop
+
+**Problem:**  
+The tester entered the PIN but waited for a **Submit** button.
+
+**Fix:**
+
+- Added automatic input focus
+- Triggered submission automatically after the 4th digit
+- Added clearer input feedback
+
+**Result:** The PIN flow became effectively one-step.
+
+---
+
+### Tester 2 — Mobile User
+
+**Problem:**  
+The tester tried to download raw code snippets to mobile storage instead of simply copying them.
+
+**Fix:**
+
+Separated the actions into two clearly defined operations:
+
+- **Copy Snippet** — copies code directly to the clipboard and displays a confirmation toast
+- **Download File** — downloads binary/file uploads
+
+This makes the intended action clearer depending on the type of content being shared.
+
+---
+
+## AI Usage 🤖
+
+AI was used during development to assist with:
+
+- Responsive UI layout generation
+- Countdown timer logic
+- File upload state management
+- Component implementation
+
+### One Thing AI Got Wrong
+
+The initial QR-code integration caused the application to render a blank screen.
+
+The issue required manually fixing the QR component integration and adding fallback rendering to prevent the application from failing completely.
+
+---
+
+## Not Done Yet
+
+### Syntax Highlighting
+
+Code currently appears in a dark monospace block with a language label.
+
+Multi-color syntax highlighting has not yet been implemented.
+
+### PIN Brute-Force Protection
+
+A 4-digit PIN provides **10,000 possible combinations**.
+
+Without rate limiting, this is suitable for convenient, non-sensitive transfers but should **not** be treated as a high-security authentication mechanism.
+
+### Scheduled Server-Side Cron
+
+Drops currently expire passively when they are queried or created rather than through an independent scheduled cleanup daemon.
+
+---
+
+## Run It Locally
+
+### 1. Clone the repository
+
+```bash
+git clone <repository-url>
+cd flashdrop
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Configure environment variables
+
+Create a `.env` file and add:
+
+```env
+VITE_SUPABASE_URL=<your-supabase-url>
+VITE_SUPABASE_ANON_KEY=<your-supabase-anon-key>
+```
+
+### 4. Start the development server
+
+```bash
+npm run dev
+```
+
+The application will be available through the local development URL provided by Vite.
+
+---
+
+## 🌐 Live Demo
+
+Try FlashDrop here:
+
+**https://flash-drop69.lovable.app**
+
+---
+
+## Core Idea
+
+FlashDrop is built around one principle:
+
+> **Transfer it. Use it. Forget it.**
+
+No accounts.  
+No unnecessary messaging.  
+No permanent drops.
+
+Just a fast way to move files and snippets between devices before they disappear.
